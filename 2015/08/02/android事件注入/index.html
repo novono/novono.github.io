@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Just Another Codes</title>
+  <title>android事件注入 | Just Another Codes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Just Another Codes">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="另外一个伤感的问题，测试的同学发现了一个概率性问题。OK，那就抓Log，发现是那个RandomAccessFile抛出IO Exception那就在挂掉的地方重新来一次呗，改完如何测试？？？本来切通道和唤出菜单都是有广播和按键事件可以利用的，写了一个小小的服务。后来想起，实际上可以通过sendevent /dev/input/event0 进行模拟、按键事件的注入，随查询了一下abs的代码，发现一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android事件注入">
+<meta property="og:url" content="http://yoursite.com/2015/08/02/android事件注入/index.html">
 <meta property="og:site_name" content="Just Another Codes">
-<meta property="og:description">
+<meta property="og:description" content="另外一个伤感的问题，测试的同学发现了一个概率性问题。OK，那就抓Log，发现是那个RandomAccessFile抛出IO Exception那就在挂掉的地方重新来一次呗，改完如何测试？？？本来切通道和唤出菜单都是有广播和按键事件可以利用的，写了一个小小的服务。后来想起，实际上可以通过sendevent /dev/input/event0 进行模拟、按键事件的注入，随查询了一下abs的代码，发现一">
+<meta property="og:updated_time" content="2015-08-02T08:46:48.355Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Just Another Codes">
-<meta name="twitter:description">
+<meta name="twitter:title" content="android事件注入">
+<meta name="twitter:description" content="另外一个伤感的问题，测试的同学发现了一个概率性问题。OK，那就抓Log，发现是那个RandomAccessFile抛出IO Exception那就在挂掉的地方重新来一次呗，改完如何测试？？？本来切通道和唤出菜单都是有广播和按键事件可以利用的，写了一个小小的服务。后来想起，实际上可以通过sendevent /dev/input/event0 进行模拟、按键事件的注入，随查询了一下abs的代码，发现一">
   
     <link rel="alternative" href="/atom.xml" title="Just Another Codes" type="application/atom+xml">
   
@@ -157,9 +158,7 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
-  
-    <article id="post-android事件注入" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-android事件注入" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2015/08/02/android事件注入/" class="article-date">
@@ -175,12 +174,19 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/02/android事件注入/">android事件注入</a>
+    <h1 class="article-title" itemprop="name">
+      android事件注入
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -339,16 +345,19 @@
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/08/02/adb源码初读/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">adb源码初读</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
   
 </article>
 
@@ -357,216 +366,6 @@
 
 
 
-
-  
-    <article id="post-adb源码初读" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/08/02/adb源码初读/" class="article-date">
-  	<time datetime="2015-08-02T08:27:48.651Z" itemprop="datePublished">2015-08-02</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/02/adb源码初读/">adb源码初读</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>先上一张图片，这是adb通信的时候的主要模块</p>
-<p><img src="/img/15-8-adb_main.png" alt="adb_main"></p>
-<p>Host即主机，在实际操作中，可以把电脑，android主机当做Host，使用adb命令连接即可<br>主机内会开启一个Server，通过TCP进行内部的通信，adb-client即用户输入界面之类的。而客户端中跑的是一个叫做adbd的东西，全称是：adb daemon 在android设备端的守护进程，看源码可以发现这货是随整机启动的。<br>下面是源码走读时间：路径位于：/system/core/adb，大家可以看到一些奇怪的标签ADB_HOST。。aha。。区分主从应用所用。。。先mm一番，会发现编译会生成主机端和客户端两个可执行文件：</p>
-<pre><code><span class="string">Install:</span> out<span class="regexp">/target/</span>product<span class="regexp">/seewo/</span>system<span class="regexp">/bin/</span>adb 主机端的bin，可以直接在电脑执行
-<span class="string">Install:</span> out<span class="regexp">/target/</span>product<span class="regexp">/seewo/</span>root<span class="regexp">/sbin/</span>adbd 客户端守护进程的bin
-</code></pre><p>那么，如何解决通信问题呢？<br>看源码：commandline.c 这里就是处理Host端指令的地方，问我为什么知道？看mk文件，然后顺着读下来就行了。</p>
-<pre><code><span class="function"><span class="keyword">int</span> <span class="title">adb_commandline</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>{
-
-}
-</code></pre><p>举例：</p>
-<pre><code><span class="keyword">if</span>(!<span class="built_in">strcmp</span>(argv[<span class="number">0</span>], <span class="string">"connect"</span>)) {
-        <span class="keyword">char</span> *tmp;
-        <span class="keyword">if</span> (argc != <span class="number">2</span>) {
-            <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Usage: adb connect &lt;host&gt;[:&lt;port&gt;]\n"</span>);
-            <span class="keyword">return</span> <span class="number">1</span>;
-        }
-        <span class="built_in">snprintf</span>(buf, <span class="keyword">sizeof</span> buf, <span class="string">"host:connect:%s"</span>, argv[<span class="number">1</span>]);
-        tmp = adb_query(buf);
-        <span class="keyword">if</span>(tmp) {
-            <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, tmp);
-            <span class="keyword">return</span> <span class="number">0</span>;
-        } <span class="keyword">else</span> {
-            <span class="keyword">return</span> <span class="number">1</span>;
-        }
-    }
-</code></pre><p>  //我试着写了一个，效果杠杠的</p>
-<p>这里进行连接的判断<br>既然我们需要进行信息交换，那么类似的有adb logcat ，看这部分代码</p>
-<pre><code><span class="keyword">if</span>(!<span class="built_in">strcmp</span>(argv[<span class="number">0</span>],<span class="string">"logcat"</span>) || !<span class="built_in">strcmp</span>(argv[<span class="number">0</span>],<span class="string">"lolcat"</span>) || !<span class="built_in">strcmp</span>(argv[<span class="number">0</span>],<span class="string">"longcat"</span>)) {
-    <span class="keyword">return</span> logcat(ttype, serial, argc, argv);
-}
-</code></pre><p>// 之后是</p>
-<pre><code><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">logcat</span><span class="params">(transport_type transport, <span class="keyword">char</span>* serial, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span>
-</span>{
-    <span class="keyword">char</span> buf[<span class="number">4096</span>];
-    <span class="keyword">char</span> *log_tags;
-    <span class="keyword">char</span> *quoted_log_tags;
-    log_tags = getenv(<span class="string">"ANDROID_LOG_TAGS"</span>);
-    quoted_log_tags = dupAndQuote(log_tags == <span class="literal">NULL</span> ? <span class="string">""</span> : log_tags);
-    <span class="built_in">snprintf</span>(buf, <span class="keyword">sizeof</span>(buf),
-        <span class="string">"shell:export ANDROID_LOG_TAGS=\"\%s\" ; exec logcat"</span>,
-        quoted_log_tags);
-    <span class="built_in">free</span>(quoted_log_tags);
-    <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(argv[<span class="number">0</span>],<span class="string">"longcat"</span>)) {
-        <span class="built_in">strncat</span>(buf, <span class="string">" -v long"</span>, <span class="keyword">sizeof</span>(buf)-<span class="number">1</span>);
-    }
-    argc -= <span class="number">1</span>;
-    argv += <span class="number">1</span>;
-    <span class="keyword">while</span>(argc-- &gt; <span class="number">0</span>) {
-        <span class="keyword">char</span> *quoted;
-        quoted = dupAndQuote (*argv++);
-        <span class="built_in">strncat</span>(buf, <span class="string">" "</span>, <span class="keyword">sizeof</span>(buf)-<span class="number">1</span>);
-        <span class="built_in">strncat</span>(buf, quoted, <span class="keyword">sizeof</span>(buf)-<span class="number">1</span>);
-        <span class="built_in">free</span>(quoted);
-    }
-    send_shellcommand(transport, serial, buf);<span class="comment">//实际最终执行的地方</span>
-    <span class="keyword">return</span> <span class="number">0</span>;
-}
-</code></pre><p>//之后是：</p>
-<pre><code><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">send_shellcommand</span><span class="params">(transport_type transport, <span class="keyword">char</span>* serial, <span class="keyword">char</span>* buf)</span>
-</span>{
-    <span class="keyword">int</span> fd, ret;
-    <span class="keyword">for</span>(;;) {
-        fd = adb_connect(buf);<span class="comment">//如果没连接则等待设备</span>
-        <span class="keyword">if</span>(fd &gt;= <span class="number">0</span>)
-            <span class="keyword">break</span>;
-        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"- waiting for device -\n"</span>);<span class="comment">//是不是觉得这句话很眼熟</span>
-        adb_sleep_ms(<span class="number">1000</span>);
-        do_cmd(transport, serial, <span class="string">"wait-for-device"</span>, <span class="number">0</span>);<span class="comment">//真的去等设备了，等到心碎，而且会滚回去开头的那个函数</span>
-    }
-    read_and_dump(fd);<span class="comment">//重点来了，后面读这里</span>
-    ret = adb_close(fd);
-    <span class="keyword">if</span> (ret)
-        perror(<span class="string">"close"</span>);
-    <span class="keyword">return</span> ret;
-}
-</code></pre><p>//读取Log的地方</p>
-<pre><code><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">read_and_dump</span><span class="params">(<span class="keyword">int</span> fd)</span>
-</span>{
-    <span class="keyword">char</span> buf[<span class="number">4096</span>];
-    <span class="keyword">int</span> len;
-    <span class="keyword">while</span>(fd &gt;= <span class="number">0</span>) {
-        D(<span class="string">"read_and_dump(): pre adb_read(fd=%d)\n"</span>, fd);<span class="comment">//可以尝试把这个打印打开，你就知道怎么回事了</span>
-        len = adb_read(fd, buf, <span class="number">4096</span>);<span class="comment">//实际上还是读取USB设备写过来的数据</span>
-        D(<span class="string">"read_and_dump(): post adb_read(fd=%d): len=%d\n"</span>, fd, len);
-        <span class="keyword">if</span>(len == <span class="number">0</span>) {
-            <span class="keyword">break</span>;
-        }
-        <span class="keyword">if</span>(len &lt; <span class="number">0</span>) {
-            <span class="keyword">if</span>(errno == EINTR) <span class="keyword">continue</span>;
-            <span class="keyword">break</span>;
-        }
-        fwrite(buf, <span class="number">1</span>, len, <span class="built_in">stdout</span>);
-        fflush(<span class="built_in">stdout</span>);
-    }
-}
-</code></pre><p>这个时候问题来了，如何实现从设备向主设备发送消息呢？</p>
-<pre><code>adb Logcat <span class="operator">-s</span> “something”
-</code></pre><p>over</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/08/02/hello-world/" class="article-date">
-  	<time datetime="2015-08-02T07:05:42.698Z" itemprop="datePublished">2015-08-02</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/02/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-  
 </div>
       <footer id="footer">
   <div class="outer">
@@ -590,8 +389,8 @@
 		fancybox: true,
 		mathjax: true,
 		animate: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

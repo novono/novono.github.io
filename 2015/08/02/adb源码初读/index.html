@@ -3,17 +3,25 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Just Another Codes</title>
+  <title>adb源码初读 | Just Another Codes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Just Another Codes">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="先上一张图片，这是adb通信的时候的主要模块
+
+Host即主机，在实际操作中，可以把电脑，android主机当做Host，使用adb命令连接即可主机内会开启一个Server，通过TCP进行内部的通信，adb-client即用户输入界面之类的。而客户端中跑的是一个叫做adbd的东西，全称是：adb daemon 在android设备端的守护进程，看源码可以发现这货是随整机启动的。下面是源码走读时间：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="adb源码初读">
+<meta property="og:url" content="http://yoursite.com/2015/08/02/adb源码初读/index.html">
 <meta property="og:site_name" content="Just Another Codes">
-<meta property="og:description">
+<meta property="og:description" content="先上一张图片，这是adb通信的时候的主要模块
+
+Host即主机，在实际操作中，可以把电脑，android主机当做Host，使用adb命令连接即可主机内会开启一个Server，通过TCP进行内部的通信，adb-client即用户输入界面之类的。而客户端中跑的是一个叫做adbd的东西，全称是：adb daemon 在android设备端的守护进程，看源码可以发现这货是随整机启动的。下面是源码走读时间：">
+<meta property="og:image" content="http://yoursite.com/img/15-8-adb_main.png">
+<meta property="og:updated_time" content="2015-08-02T08:27:48.651Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Just Another Codes">
-<meta name="twitter:description">
+<meta name="twitter:title" content="adb源码初读">
+<meta name="twitter:description" content="先上一张图片，这是adb通信的时候的主要模块
+
+Host即主机，在实际操作中，可以把电脑，android主机当做Host，使用adb命令连接即可主机内会开启一个Server，通过TCP进行内部的通信，adb-client即用户输入界面之类的。而客户端中跑的是一个叫做adbd的东西，全称是：adb daemon 在android设备端的守护进程，看源码可以发现这货是随整机启动的。下面是源码走读时间：">
   
     <link rel="alternative" href="/atom.xml" title="Just Another Codes" type="application/atom+xml">
   
@@ -157,9 +165,7 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
-  
-    <article id="post-adb源码初读" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-adb源码初读" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2015/08/02/adb源码初读/" class="article-date">
@@ -175,12 +181,19 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/02/adb源码初读/">adb源码初读</a>
+    <h1 class="article-title" itemprop="name">
+      adb源码初读
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -287,16 +300,19 @@
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/08/02/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hello World</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
   
 </article>
 
@@ -305,68 +321,6 @@
 
 
 
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/08/02/hello-world/" class="article-date">
-  	<time datetime="2015-08-02T07:05:42.698Z" itemprop="datePublished">2015-08-02</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/02/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-  
 </div>
       <footer id="footer">
   <div class="outer">
@@ -390,8 +344,8 @@
 		fancybox: true,
 		mathjax: true,
 		animate: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

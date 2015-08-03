@@ -159,6 +159,61 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-NFC知识点整理" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/03/NFC知识点整理/" class="article-date">
+  	<time datetime="2015-08-03T13:46:59.964Z" itemprop="datePublished">2015-08-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/03/NFC知识点整理/">NFC知识点整理</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>又开始了愉快的一周，为了准备分享，所以只能趁着现在把之前的一些知识点做下整理<br>首先是写在公司博客的一些内容：<br>1、卡的类型<br>手头供应商为NXP，所以给的卡就是Mifare Classic/Plus/Desfire/UtrilLight，已经基本覆盖所有NXP的卡片类型，剩下的区别就是容量和加密类型区别而已<br>2、关于Classic类型的卡<br>NFC芯片存在一个EEPROM的区域，里面分为了几个区域，我们通过指令进行不同区域的读写加密<br>3、关于工卡<br>某厂工卡使用Classic类型的卡片，此类型卡已经有专门破解的硬件了。<br>已经能够批量复制工卡。<br>4、涉及的协议：ISO/IEC 14443A（1~4），ISO 7816（APDU，此为命令），部分卡片或者读卡器会有一些私有的指令<br>5、安全，Plus S使用AES，Desfire也有更高级的加密，其他的即使有也形同虚设。银行卡级别的使用了一个叫做SE的加密模块，这个需要硬件支持。目前用在sim卡、银行卡等场景<br>6、能否用NFC Android模拟一张卡？<br>这个叫做HCE(Host-based Card Emulation) ，Android4.4后支持，但支持的协议仅有： ISO/IEC 7816-4 over ISO-DEP (ISO/IEC 14443-4)<br>此处有一老外的回答：</p>
+<p>Speculations on why they decided that way:</p>
+<p>First of all, ISO/IEC 7816-4 over ISO-DEP is the highes protocol layer that could be used to route communication to the application processor through NCI (NFC Controller Interface). Routing lower protocol layers is possible (read: “the NCI protocol supports this”), though there is no need for the NFC controller to even support routing of lower layer communication.<br>ISO/IEC 7816-4 over ISO-DEP permits routing on a per-application basis. I.e. the reader selects a specific application and only then, the NFC controller decides if the communication is passed to a secure element or to the application processor. The application processor can perform a similar routing mechanism to route communication to a specific app (that’s what’s done on Android now).<br>Using lower protocol layers (e.g. ISO/IEC 14443-3) there is no way of doing per-application routing. Instead all communication on that level would be routed to either a secure element or to the application processor. If routed to the application processor, then the operating system has no means to choose between multiple apps. Instead only one app could be registered for that type of communication. However, considering the multitude of app developers for a platform like Android, permitting only a single app would be rather inhibiting development.<br>MIFARE Classic is proprietary technology from NXP. I don’t expect them to license a pure software implementation (on the application processor/Android system) of the MIFARE Classic protocol/tag platform.<br>MIFARE Classic uses non-standard framing for authentication commands, so it might be difficult to emulate over the NCI Frame RF interface (though I’m not sufficiently familiar with that protocol to confirm if there’s an actual limitation that prevents MF Classic emulation).</p>
+<p>简而言之，Google家只想支持最新的协议的卡片，classic之类的就算了吧</p>
+<p>7、项目的最后产生了一个库，现在只能支持mifare S50的，后续陆续支持其他卡片<br>8、一个可以界面的项目：<a href="https://github.com/ikarus23/MifareClassicTool" target="_blank" rel="external">https://github.com/ikarus23/MifareClassicTool</a><br>9、一些android不支持的卡片，可以通过用java重写一遍该卡片的linux驱动来实现，和当年重新BLE的协议代码一样，想想当年，还真可怜，还好这次需求没说要支持</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-android事件注入" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">

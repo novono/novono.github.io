@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>NFC知识点整理 | Just Another Codes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="又开始了愉快的一周，为了准备分享，所以只能趁着现在把之前的一些知识点做下整理首先是写在公司博客的一些内容：1、卡的类型手头供应商为NXP，所以给的卡就是Mifare Classic/Plus/Desfire/UtrilLight，已经基本覆盖所有NXP的卡片类型，剩下的区别就是容量和加密类型区别而已2、关于Classic类型的卡NFC芯片存在一个EEPROM的区域，里面分为了几个区域，我们通过指令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NFC知识点整理">
+<meta property="og:url" content="http://yoursite.com/2015/08/03/NFC知识点整理/index.html">
+<meta property="og:site_name" content="Just Another Codes">
+<meta property="og:description" content="又开始了愉快的一周，为了准备分享，所以只能趁着现在把之前的一些知识点做下整理首先是写在公司博客的一些内容：1、卡的类型手头供应商为NXP，所以给的卡就是Mifare Classic/Plus/Desfire/UtrilLight，已经基本覆盖所有NXP的卡片类型，剩下的区别就是容量和加密类型区别而已2、关于Classic类型的卡NFC芯片存在一个EEPROM的区域，里面分为了几个区域，我们通过指令">
+<meta property="og:updated_time" content="2015-08-03T13:46:59.964Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NFC知识点整理">
+<meta name="twitter:description" content="又开始了愉快的一周，为了准备分享，所以只能趁着现在把之前的一些知识点做下整理首先是写在公司博客的一些内容：1、卡的类型手头供应商为NXP，所以给的卡就是Mifare Classic/Plus/Desfire/UtrilLight，已经基本覆盖所有NXP的卡片类型，剩下的区别就是容量和加密类型区别而已2、关于Classic类型的卡NFC芯片存在一个EEPROM的区域，里面分为了几个区域，我们通过指令">
+  
+    <link rel="alternative" href="/atom.xml" title="Just Another Codes" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://ww2.sinaimg.cn/mw690/68e34b55gw1eh6usw90fyj203k03kgln.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">WilliamChen</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">随便写着</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/novono" title="github">github</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">就这么样子，毕业好几年了</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">WilliamChen</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://ww2.sinaimg.cn/mw690/68e34b55gw1eh6usw90fyj203k03kgln.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">WilliamChen</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">随便写着</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/novono" title="github">github</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-NFC知识点整理" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/03/NFC知识点整理/" class="article-date">
+  	<time datetime="2015-08-03T13:46:59.964Z" itemprop="datePublished">2015-08-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      NFC知识点整理
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>又开始了愉快的一周，为了准备分享，所以只能趁着现在把之前的一些知识点做下整理<br>首先是写在公司博客的一些内容：<br>1、卡的类型<br>手头供应商为NXP，所以给的卡就是Mifare Classic/Plus/Desfire/UtrilLight，已经基本覆盖所有NXP的卡片类型，剩下的区别就是容量和加密类型区别而已<br>2、关于Classic类型的卡<br>NFC芯片存在一个EEPROM的区域，里面分为了几个区域，我们通过指令进行不同区域的读写加密<br>3、关于工卡<br>某厂工卡使用Classic类型的卡片，此类型卡已经有专门破解的硬件了。<br>已经能够批量复制工卡。<br>4、涉及的协议：ISO/IEC 14443A（1~4），ISO 7816（APDU，此为命令），部分卡片或者读卡器会有一些私有的指令<br>5、安全，Plus S使用AES，Desfire也有更高级的加密，其他的即使有也形同虚设。银行卡级别的使用了一个叫做SE的加密模块，这个需要硬件支持。目前用在sim卡、银行卡等场景<br>6、能否用NFC Android模拟一张卡？<br>这个叫做HCE(Host-based Card Emulation) ，Android4.4后支持，但支持的协议仅有： ISO/IEC 7816-4 over ISO-DEP (ISO/IEC 14443-4)<br>此处有一老外的回答：</p>
+<p>Speculations on why they decided that way:</p>
+<p>First of all, ISO/IEC 7816-4 over ISO-DEP is the highes protocol layer that could be used to route communication to the application processor through NCI (NFC Controller Interface). Routing lower protocol layers is possible (read: “the NCI protocol supports this”), though there is no need for the NFC controller to even support routing of lower layer communication.<br>ISO/IEC 7816-4 over ISO-DEP permits routing on a per-application basis. I.e. the reader selects a specific application and only then, the NFC controller decides if the communication is passed to a secure element or to the application processor. The application processor can perform a similar routing mechanism to route communication to a specific app (that’s what’s done on Android now).<br>Using lower protocol layers (e.g. ISO/IEC 14443-3) there is no way of doing per-application routing. Instead all communication on that level would be routed to either a secure element or to the application processor. If routed to the application processor, then the operating system has no means to choose between multiple apps. Instead only one app could be registered for that type of communication. However, considering the multitude of app developers for a platform like Android, permitting only a single app would be rather inhibiting development.<br>MIFARE Classic is proprietary technology from NXP. I don’t expect them to license a pure software implementation (on the application processor/Android system) of the MIFARE Classic protocol/tag platform.<br>MIFARE Classic uses non-standard framing for authentication commands, so it might be difficult to emulate over the NCI Frame RF interface (though I’m not sufficiently familiar with that protocol to confirm if there’s an actual limitation that prevents MF Classic emulation).</p>
+<p>简而言之，Google家只想支持最新的协议的卡片，classic之类的就算了吧</p>
+<p>7、项目的最后产生了一个库，现在只能支持mifare S50的，后续陆续支持其他卡片<br>8、一个可以界面的项目：<a href="https://github.com/ikarus23/MifareClassicTool" target="_blank" rel="external">https://github.com/ikarus23/MifareClassicTool</a><br>9、一些android不支持的卡片，可以通过用java重写一遍该卡片的linux驱动来实现，和当年重新BLE的协议代码一样，想想当年，还真可怜，还好这次需求没说要支持</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/08/02/android事件注入/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">android事件注入</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 WilliamChen
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

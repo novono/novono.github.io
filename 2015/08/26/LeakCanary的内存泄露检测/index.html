@@ -3,21 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Android系统多窗口实现记录 | Just Another Codes</title>
+  <title>LeakCanary的内存泄露检测 | Just Another Codes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Tieto 的实现，在android4.0移植成功，但是应用分辨率适配有问题，支持分屏，有开源代码和PPThttp://blog.csdn.net/innost/article/details/17324753
-讲解了android4.4自带的分屏效果，试验可以，但是在我们的RK平台上有缺陷http://blog.csdn.net/ritterliu/article/details/3756023">
+  <meta name="description" content="https://github.com/square/leakcanary一个为android及java提供的内存泄露检测库
+Eclipse版本：https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse详情见Readme
+官方使用文档的翻译：http://www.liaohuqiu.net/cn/posts/leak-canary-read-">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android系统多窗口实现记录">
-<meta property="og:url" content="http://yoursite.com/2015/08/18/Android系统多窗口实现记录/index.html">
+<meta property="og:title" content="LeakCanary的内存泄露检测">
+<meta property="og:url" content="http://yoursite.com/2015/08/26/LeakCanary的内存泄露检测/index.html">
 <meta property="og:site_name" content="Just Another Codes">
-<meta property="og:description" content="Tieto 的实现，在android4.0移植成功，但是应用分辨率适配有问题，支持分屏，有开源代码和PPThttp://blog.csdn.net/innost/article/details/17324753
-讲解了android4.4自带的分屏效果，试验可以，但是在我们的RK平台上有缺陷http://blog.csdn.net/ritterliu/article/details/3756023">
-<meta property="og:updated_time" content="2015-08-18T12:43:27.556Z">
+<meta property="og:description" content="https://github.com/square/leakcanary一个为android及java提供的内存泄露检测库
+Eclipse版本：https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse详情见Readme
+官方使用文档的翻译：http://www.liaohuqiu.net/cn/posts/leak-canary-read-">
+<meta property="og:updated_time" content="2015-08-26T14:26:32.759Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android系统多窗口实现记录">
-<meta name="twitter:description" content="Tieto 的实现，在android4.0移植成功，但是应用分辨率适配有问题，支持分屏，有开源代码和PPThttp://blog.csdn.net/innost/article/details/17324753
-讲解了android4.4自带的分屏效果，试验可以，但是在我们的RK平台上有缺陷http://blog.csdn.net/ritterliu/article/details/3756023">
+<meta name="twitter:title" content="LeakCanary的内存泄露检测">
+<meta name="twitter:description" content="https://github.com/square/leakcanary一个为android及java提供的内存泄露检测库
+Eclipse版本：https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse详情见Readme
+官方使用文档的翻译：http://www.liaohuqiu.net/cn/posts/leak-canary-read-">
   
     <link rel="alternative" href="/atom.xml" title="Just Another Codes" type="application/atom+xml">
   
@@ -165,11 +168,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-Android系统多窗口实现记录" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-LeakCanary的内存泄露检测" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/08/18/Android系统多窗口实现记录/" class="article-date">
-  	<time datetime="2015-08-18T12:43:27.556Z" itemprop="datePublished">2015-08-18</time>
+      <a href="/2015/08/26/LeakCanary的内存泄露检测/" class="article-date">
+  	<time datetime="2015-08-26T14:26:32.759Z" itemprop="datePublished">2015-08-26</time>
 </a>
     </div>
   
@@ -182,7 +185,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Android系统多窗口实现记录
+      LeakCanary的内存泄露检测
     </h1>
   
 
@@ -198,12 +201,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Tieto 的实现，在android4.0移植成功，但是应用分辨率适配有问题，支持分屏，有开源代码和PPT<br><a href="http://blog.csdn.net/innost/article/details/17324753" target="_blank" rel="external">http://blog.csdn.net/innost/article/details/17324753</a></p>
-<p>讲解了android4.4自带的分屏效果，试验可以，但是在我们的RK平台上有缺陷<br><a href="http://blog.csdn.net/ritterliu/article/details/37560239" target="_blank" rel="external">http://blog.csdn.net/ritterliu/article/details/37560239</a></p>
-<p>上文的同一个作者，还没有开始移植代码，支持多窗口，但是应该和第一个Tieto有类似问题<br><a href="http://blog.csdn.net/ritterliu/article/details/32699125" target="_blank" rel="external">http://blog.csdn.net/ritterliu/article/details/32699125</a></p>
-<p>这里有一家实现多窗口比较好的产品，买了样品<br><a href="http://www.jide.com/remixos" target="_blank" rel="external">http://www.jide.com/remixos</a></p>
-<p>预计未来android会支持多窗口机制，如果需要自己实现，预计需要研究一下问题</p>
-<p>1、android窗口机制的实现原理<br>2、触摸等输入事件的处理<br>3、Stack的处理<br>4、生命周期的控制<br>5、应用适配与切换</p>
+        <p><a href="https://github.com/square/leakcanary" target="_blank" rel="external">https://github.com/square/leakcanary</a><br>一个为android及java提供的内存泄露检测库</p>
+<p>Eclipse版本：<a href="https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse" target="_blank" rel="external">https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse</a><br>详情见Readme</p>
+<p>官方使用文档的翻译：<a href="http://www.liaohuqiu.net/cn/posts/leak-canary-read-me/" target="_blank" rel="external">http://www.liaohuqiu.net/cn/posts/leak-canary-read-me/</a></p>
+<p>另外一篇文档：<a href="http://www.liaohuqiu.net/cn/posts/leak-canary/" target="_blank" rel="external">http://www.liaohuqiu.net/cn/posts/leak-canary/</a></p>
 
       
     </div>
@@ -213,18 +214,9 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/08/26/LeakCanary的内存泄露检测/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          LeakCanary的内存泄露检测
-        
-      </div>
-    </a>
   
-  
-    <a href="/2015/08/13/最近读的书/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">最近读的一些书</div>
+    <a href="/2015/08/18/Android系统多窗口实现记录/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android系统多窗口实现记录</div>
       <strong class="article-nav-caption">></strong>
     </a>
   

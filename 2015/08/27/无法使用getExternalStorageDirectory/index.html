@@ -19,7 +19,7 @@ public static File getExternalStorageDirectory() {
 public static File getExternalStorageDirectory() {
  throwIfSystem();
  ret">
-<meta property="og:updated_time" content="2015-08-27T07:59:29.836Z">
+<meta property="og:updated_time" content="2015-08-27T08:24:54.784Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android.uid.system 权限应用无法使用getExternalStorageDirectory">
 <meta name="twitter:description" content="系统应用目前是被限制随意使用存储权限的，故Environment.getExternalStorageDirectory()这个方法是被限制的
@@ -178,7 +178,7 @@ public static File getExternalStorageDirectory() {
   
     <div class="article-meta">
       <a href="/2015/08/27/无法使用getExternalStorageDirectory/" class="article-date">
-  	<time datetime="2015-08-27T08:22:26.678Z" itemprop="datePublished">2015-08-27</time>
+  	<time datetime="2015-08-27T08:24:54.784Z" itemprop="datePublished">2015-08-27</time>
 </a>
     </div>
   
@@ -213,9 +213,20 @@ public static File getExternalStorageDirectory() {
  throwIfSystem();
  <span class="function"><span class="keyword">return</span> sCurrentUser.<span class="title">getExternalStorageDirectory</span><span class="params">()</span></span>;
 }
-</code></pre><p>其中：<br>    private static void throwIfSystem() {<br>       if (Process.myUid() == Process.SYSTEM_UID) {<br>             Log.wtf(TAG, “Static storage paths aren’t available from AID_SYSTEM”, new Throwable());<br>       }<br>    }<br>将被抛出Throwable，这里是无视其他权限声明的，只要是系统的uid就直接异常</p>
-<p>解决方案：<br>1、直接写入目录地址，不通过系统方法获取：既然都是系统应用了，那么路径你就应该可以知道<br>2、把getExternalStorageDirectory方法给改了，忽略这个异常<br>3、使用<br>    public static class UserEnvironment {<br>         public File getExternalStorageDirectory() {<br>                           return mExternalStorage;<br>        }<br>    }</p>
-<p>中的方法，不过这个类是隐藏的。</p>
+</code></pre><p>其中：</p>
+<pre><code><span class="keyword">private</span> <span class="keyword">static</span> <span class="function"><span class="keyword">void</span> <span class="title">throwIfSystem</span><span class="params">()</span> </span>{
+   <span class="keyword">if</span> (Process.myUid() == Process.SYSTEM_UID) {
+         Log.wtf(TAG, <span class="string">"Static storage paths aren't available from AID_SYSTEM"</span>, <span class="keyword">new</span> Throwable());
+   }
+}
+</code></pre><p>将被抛出Throwable，这里是无视其他权限声明的，只要是系统的uid就直接异常</p>
+<p>解决方案：<br>1、直接写入目录地址，不通过系统方法获取：既然都是系统应用了，那么路径你就应该可以知道<br>2、把getExternalStorageDirectory方法给改了，忽略这个异常<br>3、使用</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">UserEnvironment</span> {
+     <span class="function"><span class="keyword">public</span> File <span class="title">getExternalStorageDirectory</span>(<span class="params"></span>) </span>{
+                       <span class="keyword">return</span> mExternalStorage;
+    }
+}
+</code></pre><p>中的方法，不过这个类是隐藏的。</p>
 
       
     </div>

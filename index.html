@@ -163,6 +163,65 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-无法使用getExternalStorageDirectory" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/27/无法使用getExternalStorageDirectory/" class="article-date">
+  	<time datetime="2015-08-27T08:22:26.678Z" itemprop="datePublished">2015-08-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/27/无法使用getExternalStorageDirectory/">android.uid.system 权限应用无法使用getExternalStorageDirectory</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>系统应用目前是被限制随意使用存储权限的，故Environment.getExternalStorageDirectory()这个方法是被限制的</p>
+<p>./base/core/java/android/os/Environment.java 中此方法的实现是：</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">static</span> <span class="function">File <span class="title">getExternalStorageDirectory</span><span class="params">()</span> </span>{
+ throwIfSystem();
+ <span class="function"><span class="keyword">return</span> sCurrentUser.<span class="title">getExternalStorageDirectory</span><span class="params">()</span></span>;
+}
+</code></pre><p>其中：<br>    private static void throwIfSystem() {<br>       if (Process.myUid() == Process.SYSTEM_UID) {<br>             Log.wtf(TAG, “Static storage paths aren’t available from AID_SYSTEM”, new Throwable());<br>       }<br>    }<br>将被抛出Throwable，这里是无视其他权限声明的，只要是系统的uid就直接异常</p>
+<p>解决方案：<br>1、直接写入目录地址，不通过系统方法获取：既然都是系统应用了，那么路径你就应该可以知道<br>2、把getExternalStorageDirectory方法给改了，忽略这个异常<br>3、使用<br>    public static class UserEnvironment {<br>         public File getExternalStorageDirectory() {<br>                           return mExternalStorage;<br>        }<br>    }</p>
+<p>中的方法，不过这个类是隐藏的。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-LeakCanary的内存泄露检测" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">

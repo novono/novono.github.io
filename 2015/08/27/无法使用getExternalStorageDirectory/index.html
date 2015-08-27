@@ -3,24 +3,30 @@
 <head>
   <meta charset="utf-8">
   
-  <title>LeakCanary的内存泄露检测 | Just Another Codes</title>
+  <title>android.uid.system 权限应用无法使用getExternalStorageDirectory | Just Another Codes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="https://github.com/square/leakcanary一个为android及java提供的内存泄露检测库
-Eclipse版本：https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse详情见Readme
-官方使用文档的翻译：http://www.liaohuqiu.net/cn/posts/leak-canary-read-">
+  <meta name="description" content="系统应用目前是被限制随意使用存储权限的，故Environment.getExternalStorageDirectory()这个方法是被限制的
+./base/core/java/android/os/Environment.java 中此方法的实现是：
+public static File getExternalStorageDirectory() {
+ throwIfSystem();
+ ret">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeakCanary的内存泄露检测">
-<meta property="og:url" content="http://yoursite.com/2015/08/26/LeakCanary的内存泄露检测/index.html">
+<meta property="og:title" content="android.uid.system 权限应用无法使用getExternalStorageDirectory">
+<meta property="og:url" content="http://yoursite.com/2015/08/27/无法使用getExternalStorageDirectory/index.html">
 <meta property="og:site_name" content="Just Another Codes">
-<meta property="og:description" content="https://github.com/square/leakcanary一个为android及java提供的内存泄露检测库
-Eclipse版本：https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse详情见Readme
-官方使用文档的翻译：http://www.liaohuqiu.net/cn/posts/leak-canary-read-">
-<meta property="og:updated_time" content="2015-08-26T14:26:32.759Z">
+<meta property="og:description" content="系统应用目前是被限制随意使用存储权限的，故Environment.getExternalStorageDirectory()这个方法是被限制的
+./base/core/java/android/os/Environment.java 中此方法的实现是：
+public static File getExternalStorageDirectory() {
+ throwIfSystem();
+ ret">
+<meta property="og:updated_time" content="2015-08-27T07:59:29.836Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeakCanary的内存泄露检测">
-<meta name="twitter:description" content="https://github.com/square/leakcanary一个为android及java提供的内存泄露检测库
-Eclipse版本：https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse详情见Readme
-官方使用文档的翻译：http://www.liaohuqiu.net/cn/posts/leak-canary-read-">
+<meta name="twitter:title" content="android.uid.system 权限应用无法使用getExternalStorageDirectory">
+<meta name="twitter:description" content="系统应用目前是被限制随意使用存储权限的，故Environment.getExternalStorageDirectory()这个方法是被限制的
+./base/core/java/android/os/Environment.java 中此方法的实现是：
+public static File getExternalStorageDirectory() {
+ throwIfSystem();
+ ret">
   
     <link rel="alternative" href="/atom.xml" title="Just Another Codes" type="application/atom+xml">
   
@@ -168,11 +174,11 @@ Eclipse版本：https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse详情�
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-LeakCanary的内存泄露检测" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-无法使用getExternalStorageDirectory" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/08/26/LeakCanary的内存泄露检测/" class="article-date">
-  	<time datetime="2015-08-26T14:26:32.759Z" itemprop="datePublished">2015-08-26</time>
+      <a href="/2015/08/27/无法使用getExternalStorageDirectory/" class="article-date">
+  	<time datetime="2015-08-27T08:22:26.678Z" itemprop="datePublished">2015-08-27</time>
 </a>
     </div>
   
@@ -185,7 +191,7 @@ Eclipse版本：https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse详情�
         
   
     <h1 class="article-title" itemprop="name">
-      LeakCanary的内存泄露检测
+      android.uid.system 权限应用无法使用getExternalStorageDirectory
     </h1>
   
 
@@ -201,10 +207,15 @@ Eclipse版本：https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse详情�
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://github.com/square/leakcanary" target="_blank" rel="external">https://github.com/square/leakcanary</a><br>一个为android及java提供的内存泄露检测库</p>
-<p>Eclipse版本：<a href="https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse" target="_blank" rel="external">https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse</a><br>详情见Readme</p>
-<p>官方使用文档的翻译：<a href="http://www.liaohuqiu.net/cn/posts/leak-canary-read-me/" target="_blank" rel="external">http://www.liaohuqiu.net/cn/posts/leak-canary-read-me/</a></p>
-<p>另外一篇文档：<a href="http://www.liaohuqiu.net/cn/posts/leak-canary/" target="_blank" rel="external">http://www.liaohuqiu.net/cn/posts/leak-canary/</a></p>
+        <p>系统应用目前是被限制随意使用存储权限的，故Environment.getExternalStorageDirectory()这个方法是被限制的</p>
+<p>./base/core/java/android/os/Environment.java 中此方法的实现是：</p>
+<pre><code><span class="keyword">public</span> <span class="keyword">static</span> <span class="function">File <span class="title">getExternalStorageDirectory</span><span class="params">()</span> </span>{
+ throwIfSystem();
+ <span class="function"><span class="keyword">return</span> sCurrentUser.<span class="title">getExternalStorageDirectory</span><span class="params">()</span></span>;
+}
+</code></pre><p>其中：<br>    private static void throwIfSystem() {<br>       if (Process.myUid() == Process.SYSTEM_UID) {<br>             Log.wtf(TAG, “Static storage paths aren’t available from AID_SYSTEM”, new Throwable());<br>       }<br>    }<br>将被抛出Throwable，这里是无视其他权限声明的，只要是系统的uid就直接异常</p>
+<p>解决方案：<br>1、直接写入目录地址，不通过系统方法获取：既然都是系统应用了，那么路径你就应该可以知道<br>2、把getExternalStorageDirectory方法给改了，忽略这个异常<br>3、使用<br>    public static class UserEnvironment {<br>         public File getExternalStorageDirectory() {<br>                           return mExternalStorage;<br>        }<br>    }</p>
+<p>中的方法，不过这个类是隐藏的。</p>
 
       
     </div>
@@ -214,18 +225,9 @@ Eclipse版本：https://github.com/SOFTPOWER1991/LeakcanarySample-Eclipse详情�
     
 <nav id="article-nav">
   
-    <a href="/2015/08/27/无法使用getExternalStorageDirectory/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          android.uid.system 权限应用无法使用getExternalStorageDirectory
-        
-      </div>
-    </a>
   
-  
-    <a href="/2015/08/18/Android系统多窗口实现记录/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Android系统多窗口实现记录</div>
+    <a href="/2015/08/26/LeakCanary的内存泄露检测/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">LeakCanary的内存泄露检测</div>
       <strong class="article-nav-caption">></strong>
     </a>
   

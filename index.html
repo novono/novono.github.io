@@ -163,6 +163,337 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-uesless-Android类加载器" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/31/uesless-Android类加载器/" class="article-date">
+  	<time datetime="2015-08-31T13:02:15.747Z" itemprop="datePublished">2015-08-31</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/31/uesless-Android类加载器/">uesless-Android类加载器</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>虚拟机部分</p>
+<p>  android/ics/libcore/dalvik</p>
+<p>  ./src/main/java/dalvik/system/DexClassLoader.java</p>
+<p>Extend the BaseDexClassLoader</p>
+<p>  ./src/main/java/dalvik/system/BaseDexClassLoader.java</p>
+<p>Extend from the ClassLoader, and the ClassLoader is the base JVM functions</p>
+<p>所以可以看出，实际Android的方法依旧是继承自通用的类加载方法</p>
+<p>下面看BaseDexClassLoader构造的实例：<br>public BaseDexClassLoader(String dexPath, File optimizedDirectory,  String libraryPath, ClassLoader parent)</p>
+<p>dexPath the list of jar/apk files containing classes and resources</p>
+<pre><code><span class="keyword">public</span> BaseDexClassLoader(<span class="keyword">String</span> dexPath, File optimizedDirectory,
+        <span class="keyword">String</span> libraryPath, ClassLoader parent) {
+    <span class="keyword">super</span>(parent);
+    <span class="keyword">this</span>.pathList = <span class="keyword">new</span> DexPathList(<span class="keyword">this</span>, dexPath, libraryPath, optimizedDirectory);
+}
+</code></pre><p>/<em>* structured lists of path elements </em>/</p>
+<p>此处应是将此路径的实例加入DexPathList中</p>
+<pre><code><span class="annotation">@Override</span>
+<span class="keyword">protected</span> <span class="function">URL <span class="title">findResource</span><span class="params">(String name)</span> </span>{
+    <span class="function"><span class="keyword">return</span> pathList.<span class="title">findResource</span><span class="params">(name)</span></span>;
+}
+
+<span class="annotation">@Override</span>
+<span class="keyword">protected</span> Enumeration&lt;URL&gt; findResources(String name) {
+    <span class="function"><span class="keyword">return</span> pathList.<span class="title">findResources</span><span class="params">(name)</span></span>;
+}
+
+<span class="annotation">@Override</span>
+<span class="keyword">public</span> <span class="function">String <span class="title">findLibrary</span><span class="params">(String name)</span> </span>{
+    <span class="function"><span class="keyword">return</span> pathList.<span class="title">findLibrary</span><span class="params">(name)</span></span>;
+}
+</code></pre><p>此处实现了多种查找加载类中的方法<br>这个类在：./src/main/java/dalvik/system/DexPathList.java<br>从这个类中的注释可以看出，支持的文件格式还是比较多的。</p>
+<pre><code><span class="comment">/**
+ * A pair of lists of entries, associated with a {<span class="doctag">@code</span> ClassLoader}.
+ * One of the lists is a dex/resource path &amp;mdash; typically referred
+ * to as a "class path" &amp;mdash; list, and the other names directories
+ * containing native code libraries. Class path entries may be any of:
+ * a {<span class="doctag">@code</span> .jar} or {<span class="doctag">@code</span> .zip} file containing an optional
+ * top-level {<span class="doctag">@code</span> classes.dex} file as well as arbitrary resources,
+ * or a plain {<span class="doctag">@code</span> .dex} file (with no possibility of associated
+ * resources).
+ *
+ * &lt;p&gt;This class also contains methods to use these lists to look up
+ * classes and resources.&lt;/p&gt;
+ */</span>
+<span class="comment">/*package*/</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">DexPathList</span> </span>{
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEX_SUFFIX = <span class="string">".dex"</span>;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String JAR_SUFFIX = <span class="string">".jar"</span>;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ZIP_SUFFIX = <span class="string">".zip"</span>;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String APK_SUFFIX = <span class="string">".apk"</span>;
+</code></pre><p>回到BaseDexClassLoader，实际上这个类只是继承了JVM中的ClassLoader，然后对其格式文件以及路径进行了限制和扩展</p>
+<p>而PathClassLoader和DexClassLoader是对这个BaseDexClassLoader的继承</p>
+<p>下面分析DexClassLoader：</p>
+<pre><code>package dalvik.system;
+
+import java.io.File;
+
+/<span class="keyword">*</span><span class="keyword">*</span>
+ <span class="keyword">*</span> A class loader that loads classes from {<span class="comment">@code .jar} and {@code .apk} files</span>
+ <span class="keyword">*</span> containing a {<span class="comment">@code classes.dex} entry. This can be used to execute code not</span>
+ <span class="keyword">*</span> installed as part of an application.
+ <span class="keyword">*</span>
+ <span class="keyword">*</span> <span class="variable">&lt;p&gt;</span>This class loader requires an application-private, writable directory to
+ <span class="keyword">*</span> cache optimized classes. Use {<span class="comment">@code Context.getDir(String, int)} to create</span>
+ <span class="keyword">*</span> such a directory: <span class="variable">&lt;pre&gt;</span>   {<span class="comment">@code</span>
+ <span class="keyword">*</span>   File dexOutputDir = context.getDir(<span class="string">"dex"</span>, 0);
+ <span class="keyword">*</span> }<span class="variable">&lt;/pre&gt;</span>
+ <span class="keyword">*</span>
+ <span class="keyword">*</span> <span class="variable">&lt;p&gt;</span><span class="variable">&lt;strong&gt;</span>Do not cache optimized classes on external storage.<span class="variable">&lt;/strong&gt;</span>
+ <span class="keyword">*</span> External storage does not provide access controls necessary to protect your
+ <span class="keyword">*</span> application from code injection attacks.
+ <span class="keyword">*</span>/
+public class DexClassLoader extends BaseDexClassLoader {
+    /<span class="keyword">*</span><span class="keyword">*</span>
+     <span class="keyword">*</span> Creates a {<span class="comment">@code DexClassLoader} that finds interpreted and native</span>
+     <span class="keyword">*</span> code.  Interpreted classes are found in a set of DEX files contained
+     <span class="keyword">*</span> in Jar or APK files.
+     <span class="keyword">*</span>
+     <span class="keyword">*</span> <span class="variable">&lt;p&gt;</span>The path lists are separated using the character specified by the
+     <span class="keyword">*</span> {<span class="comment">@code path.separator} system property, which defaults to {@code :}.</span>
+     <span class="keyword">*</span>
+     <span class="keyword">*</span> <span class="comment">@param dexPath the list of jar/apk files containing classes and</span>
+     <span class="keyword">*</span>     resources, delimited by {<span class="comment">@code File.pathSeparator}, which</span>
+     <span class="keyword">*</span>     defaults to {<span class="comment">@code ":"} on Android</span>
+     <span class="keyword">*</span> <span class="comment">@param optimizedDirectory directory where optimized dex files</span>
+     <span class="keyword">*</span>     should be written; must not be {<span class="comment">@code null}</span>
+     <span class="keyword">*</span> <span class="comment">@param libraryPath the list of directories containing native</span>
+     <span class="keyword">*</span>     libraries, delimited by {<span class="comment">@code File.pathSeparator}; may be</span>
+     <span class="keyword">*</span>     {<span class="comment">@code null}</span>
+     <span class="keyword">*</span> <span class="comment">@param parent the parent class loader</span>
+     <span class="keyword">*</span>/
+    public DexClassLoader(String dexPath, String optimizedDirectory,
+            String libraryPath, ClassLoader parent) {
+        super(dexPath, new File(optimizedDirectory), libraryPath, parent);
+    }
+}
+</code></pre><p>这部分几乎没有对其父类进行重写，仅仅是增加一种加载某路径下的类文件的方法而已，所以可以看出，这个方法是能够对所有BaseDexClassLoader支持的类进行加载的</p>
+<pre><code>package dalvik.system;
+
+/**
+ * Provides a simple {@link ClassLoader} implementation <span class="keyword">that</span> operates <span class="function_start"><span class="keyword">on</span></span> a <span class="type">list</span>
+ * <span class="keyword">of</span> files <span class="keyword">and</span> directories <span class="keyword">in</span> <span class="keyword">the</span> <span class="keyword">local</span> <span class="type">file</span> system, <span class="keyword">but</span> <span class="keyword">does</span> <span class="keyword">not</span> attempt <span class="keyword">to</span>
+ * load classes <span class="keyword">from</span> <span class="keyword">the</span> network. Android uses this <span class="type">class</span> <span class="keyword">for</span> <span class="keyword">its</span> system <span class="type">class</span>
+ * loader <span class="keyword">and</span> <span class="keyword">for</span> <span class="keyword">its</span> <span class="type">application</span> <span class="type">class</span> loader(s).
+ */
+public <span class="type">class</span> PathClassLoader extends BaseDexClassLoader {
+    /**
+     * Creates a {@code PathClassLoader} <span class="keyword">that</span> operates <span class="function_start"><span class="keyword">on</span></span> a <span class="keyword">given</span> <span class="type">list</span> <span class="keyword">of</span> files
+     * <span class="keyword">and</span> directories. This method <span class="keyword">is</span> equivalent <span class="keyword">to</span> calling
+     * {@link <span class="comment">#PathClassLoader(String, String, ClassLoader)} with a</span>
+     * {@code null} value <span class="keyword">for</span> <span class="keyword">the</span> <span class="keyword">second</span> argument (see description there).
+     *
+     * @param dexPath <span class="keyword">the</span> <span class="type">list</span> <span class="keyword">of</span> jar/apk files containing classes <span class="keyword">and</span>
+     * resources, delimited <span class="keyword">by</span> {@code File.pathSeparator}, which
+     * defaults <span class="keyword">to</span> {@code <span class="string">":"</span>} <span class="function_start"><span class="keyword">on</span></span> Android
+     * @param parent <span class="keyword">the</span> parent <span class="type">class</span> loader
+     */
+    public PathClassLoader(String dexPath, ClassLoader parent) {
+        super(dexPath, null, null, parent);
+    }
+
+    /**
+     * Creates a {@code PathClassLoader} <span class="keyword">that</span> operates <span class="function_start"><span class="keyword">on</span></span> two <span class="keyword">given</span>
+     * lists <span class="keyword">of</span> files <span class="keyword">and</span> directories. The entries <span class="keyword">of</span> <span class="keyword">the</span> <span class="keyword">first</span> <span class="type">list</span>
+     * should be one <span class="keyword">of</span> <span class="keyword">the</span> following:
+     *
+     * &lt;ul&gt;
+     * &lt;li&gt;JAR/ZIP/APK files, possibly containing a <span class="string">"classes.dex"</span> <span class="type">file</span> <span class="keyword">as</span>
+     * well <span class="keyword">as</span> arbitrary resources.
+     * &lt;li&gt;Raw <span class="string">".dex"</span> files (<span class="keyword">not</span> inside a zip <span class="type">file</span>).
+     * &lt;/ul&gt;
+     *
+     * The entries <span class="keyword">of</span> <span class="keyword">the</span> <span class="keyword">second</span> <span class="type">list</span> should be directories containing
+     * native library files.
+     *
+     * @param dexPath <span class="keyword">the</span> <span class="type">list</span> <span class="keyword">of</span> jar/apk files containing classes <span class="keyword">and</span>
+     * resources, delimited <span class="keyword">by</span> {@code File.pathSeparator}, which
+     * defaults <span class="keyword">to</span> {@code <span class="string">":"</span>} <span class="function_start"><span class="keyword">on</span></span> Android
+     * @param libraryPath <span class="keyword">the</span> <span class="type">list</span> <span class="keyword">of</span> directories containing native
+     * libraries, delimited <span class="keyword">by</span> {@code File.pathSeparator}; may be
+     * {@code null}
+     * @param parent <span class="keyword">the</span> parent <span class="type">class</span> loader
+     */
+    public PathClassLoader(String dexPath, String libraryPath,
+            ClassLoader parent) {
+        super(dexPath, null, libraryPath, parent);
+      }
+    }
+</code></pre><p>上面部分是PathClassLoader，看上去好像差不多，但是回到BaseDexClassLoader看一下，发现PathClassLoader是没有传入optimizedDirectory这个变量的。<br>再看下解释：@param optimizedDirectory directory where optimized dex files should be written; may be {@code null}<br>也就是说，这个路径传递的是文件的解压路径。</p>
+<pre><code>/<span class="keyword">*</span><span class="keyword">*</span>
+ <span class="keyword">*</span> Constructs an instance.
+ <span class="keyword">*</span>
+ <span class="keyword">*</span> <span class="comment">@param dexPath the list of jar/apk files containing classes and</span>
+ <span class="keyword">*</span> resources, delimited by {<span class="comment">@code File.pathSeparator}, which</span>
+ <span class="keyword">*</span> defaults to {<span class="comment">@code ":"} on Android</span>
+ <span class="keyword">*</span> <span class="comment">@param optimizedDirectory directory where optimized dex files</span>
+ <span class="keyword">*</span> should be written; may be {<span class="comment">@code null}</span>
+ <span class="keyword">*</span> <span class="comment">@param libraryPath the list of directories containing native</span>
+ <span class="keyword">*</span> libraries, delimited by {<span class="comment">@code File.pathSeparator}; may be</span>
+ <span class="keyword">*</span> {<span class="comment">@code null}</span>
+ <span class="keyword">*</span> <span class="comment">@param parent the parent class loader</span>
+ <span class="keyword">*</span>/
+public BaseDexClassLoader(String dexPath, File optimizedDirectory,
+        String libraryPath, ClassLoader parent) {
+    super(parent);
+    this.pathList = new DexPathList(this, dexPath, libraryPath, optimizedDirectory);
+}
+</code></pre><p>再看DexPathList<br>当optimizedDirectory为空时</p>
+<pre><code><span class="comment">/**
+ * Constructs an instance.
+ *
+ * @param definingContext the context in which any as-yet unresolved
+ * classes should be defined
+ * @param dexPath list of dex/resource path elements, separated by
+ * {@code File.pathSeparator}
+ * @param libraryPath list of native library directory path elements,
+ * separated by {@code File.pathSeparator}
+ * @param optimizedDirectory directory where optimized {@code .dex} files
+ * should be found and written to, or {@code null} to use the default
+ * system directory for same
+ */</span>
+<span class="keyword">public</span> DexPathList(ClassLoader definingContext, String dexPath,
+        String libraryPath, <span class="keyword">File</span> optimizedDirectory) {
+    <span class="keyword">if</span> (definingContext == <span class="keyword">null</span>) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"definingContext == null"</span>);
+    }
+
+    <span class="keyword">if</span> (dexPath == <span class="keyword">null</span>) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"dexPath == null"</span>);
+    }
+
+    <span class="keyword">if</span> (optimizedDirectory != <span class="keyword">null</span>) {
+        <span class="keyword">if</span> (!optimizedDirectory.exists())  {
+            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(
+                    <span class="string">"optimizedDirectory doesn't exist: "</span>
+                    + optimizedDirectory);
+        }
+
+        <span class="keyword">if</span> (!(optimizedDirectory.canRead()
+                        &amp;&amp; optimizedDirectory.canWrite())) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(
+                    <span class="string">"optimizedDirectory not readable/writable: "</span>
+                    + optimizedDirectory);
+        }
+    }
+
+    <span class="keyword">this</span>.definingContext = definingContext;
+    ArrayList&lt;IOException&gt; suppressedExceptions = <span class="keyword">new</span> ArrayList&lt;IOException&gt;();
+    <span class="keyword">this</span>.dexElements = makeDexElements(splitDexPath(dexPath), optimizedDirectory,
+                                       suppressedExceptions);
+    <span class="keyword">if</span> (suppressedExceptions.<span class="keyword">size</span>() &gt; <span class="number">0</span>) {
+        <span class="keyword">this</span>.dexElementsSuppressedExceptions =
+            suppressedExceptions.toArray(<span class="keyword">new</span> IOException[suppressedExceptions.<span class="keyword">size</span>()]);
+    } <span class="keyword">else</span> {
+        dexElementsSuppressedExceptions = <span class="keyword">null</span>;
+    }
+    <span class="keyword">this</span>.nativeLibraryDirectories = splitLibraryPath(libraryPath);
+}
+
+
+    <span class="comment">/**
+     * Makes an array of dex/resource path elements, one per element of
+     * the given array.
+     */</span>
+    <span class="keyword">private</span> <span class="keyword">static</span> Element[] makeDexElements(ArrayList&lt;<span class="keyword">File</span>&gt; files, <span class="keyword">File</span> optimizedDirectory,
+                                             ArrayList&lt;IOException&gt; suppressedExceptions) {
+        ArrayList&lt;Element&gt; elements = <span class="keyword">new</span> ArrayList&lt;Element&gt;();
+        <span class="comment">/*
+         * Open all files and load the (direct or contained) dex files
+         * up front.
+         */</span>
+        <span class="keyword">for</span> (<span class="keyword">File</span> <span class="keyword">file</span> : files) {
+            <span class="keyword">File</span> zip = <span class="keyword">null</span>;
+            DexFile dex = <span class="keyword">null</span>;
+            String name = <span class="keyword">file</span>.getName();
+
+            <span class="keyword">if</span> (name.endsWith(DEX_SUFFIX)) {
+                <span class="comment">// Raw dex file (not inside a zip/jar).</span>
+                <span class="keyword">try</span> {
+                    dex = loadDexFile(<span class="keyword">file</span>, optimizedDirectory);
+                } <span class="keyword">catch</span> (IOException ex) {
+                    System.logE(<span class="string">"Unable to load dex file: "</span> + <span class="keyword">file</span>, ex);
+                }
+            } <span class="keyword">else</span> <span class="keyword">if</span> (name.endsWith(APK_SUFFIX) || name.endsWith(JAR_SUFFIX)
+                    || name.endsWith(ZIP_SUFFIX)) {
+                zip = <span class="keyword">file</span>;
+
+                <span class="keyword">try</span> {
+                    dex = loadDexFile(<span class="keyword">file</span>, optimizedDirectory);
+                } <span class="keyword">catch</span> (IOException suppressed) {
+                    <span class="comment">/*
+                     * IOException might get thrown "legitimately" by the DexFile constructor if the
+                     * zip file turns out to be resource-only (that is, no classes.dex file in it).
+                     * Let dex == null and hang on to the exception to add to the tea-leaves for
+                     * when findClass returns null.
+                     */</span>
+                    suppressedExceptions.add(suppressed);
+                }
+            } <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">file</span>.isDirectory()) {
+                <span class="comment">// We support directories for looking up resources.</span>
+                <span class="comment">// This is only useful for running libcore tests.</span>
+                elements.add(<span class="keyword">new</span> Element(<span class="keyword">file</span>, <span class="keyword">true</span>, <span class="keyword">null</span>, <span class="keyword">null</span>));
+            } <span class="keyword">else</span> {
+                System.logW(<span class="string">"Unknown file type for: "</span> + <span class="keyword">file</span>);
+            }
+
+            <span class="keyword">if</span> ((zip != <span class="keyword">null</span>) || (dex != <span class="keyword">null</span>)) {
+                elements.add(<span class="keyword">new</span> Element(<span class="keyword">file</span>, <span class="keyword">false</span>, zip, dex));
+            }
+        }
+
+        <span class="keyword">return</span> elements.toArray(<span class="keyword">new</span> Element[elements.<span class="keyword">size</span>()]);
+    }
+</code></pre><p>makeDexElements将没有返回而直接加载dexPath下的文件，路径下的dex = loadDexFile(file, optimizedDirectory);</p>
+<p>以上给出的结论是，这两个方法中， PathClassLoader只能加载解压之后的dex文件，而DexClassLoader 能加载指定路径下的dex/jar/zip/apk中的类，并且还会妥妥地帮你解压。</p>
+<p>所以在API说明中如下：<br>DexClassLoader</p>
+<p>A class loader that loads classes from .jar and .apk files containing a classes.dex entry. This can be used to execute code not installed as part of an application.<br>This class loader requires an application-private, writable directory to cache optimized classes. Use Context.getCodeCacheDir() to create such a directory:<br>   File dexOutputDir = context.getCodeCacheDir();</p>
+<p>Do not cache optimized classes on external storage. External storage does not provide access controls necessary to protect your application from code injection attacks.</p>
+<p>来自 <a href="http://developer.android.com/reference/dalvik/system/DexClassLoader.html" target="_blank" rel="external">http://developer.android.com/reference/dalvik/system/DexClassLoader.html</a></p>
+<p>PathClassLoader</p>
+<p>Provides a simple ClassLoader implementation that operates on a list of files and directories in the local file system, but does not attempt to load classes from the network. Android uses this class for its system class loader and for its application class loader(s).</p>
+<p>来自 <a href="http://developer.android.com/reference/dalvik/system/PathClassLoader.html" target="_blank" rel="external">http://developer.android.com/reference/dalvik/system/PathClassLoader.html</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-无法使用getExternalStorageDirectory" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">

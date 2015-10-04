@@ -7,29 +7,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="虚拟机部分
   android/ics/libcore/dalvik
-  ./src/main/java/dalvik/system/DexClassLoader.java
+./src/main/java/dalvik/system/DexClassLoader.java
 Extend the BaseDexClassLoader
-  ./src/main/java/dalvik/system/BaseDexClassLoader.java
-Extend from the ClassLoader">
+./src/main/java/dalvik/system/BaseDexClassLoader.java
+Extend from the ClassLoader, an">
 <meta property="og:type" content="article">
 <meta property="og:title" content="uesless-Android类加载器">
 <meta property="og:url" content="http://yoursite.com/2015/08/31/uesless-Android类加载器/index.html">
 <meta property="og:site_name" content="Just Another Codes">
 <meta property="og:description" content="虚拟机部分
   android/ics/libcore/dalvik
-  ./src/main/java/dalvik/system/DexClassLoader.java
+./src/main/java/dalvik/system/DexClassLoader.java
 Extend the BaseDexClassLoader
-  ./src/main/java/dalvik/system/BaseDexClassLoader.java
-Extend from the ClassLoader">
-<meta property="og:updated_time" content="2015-08-31T13:02:15.747Z">
+./src/main/java/dalvik/system/BaseDexClassLoader.java
+Extend from the ClassLoader, an">
+<meta property="og:updated_time" content="2015-08-31T13:02:45.802Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="uesless-Android类加载器">
 <meta name="twitter:description" content="虚拟机部分
   android/ics/libcore/dalvik
-  ./src/main/java/dalvik/system/DexClassLoader.java
+./src/main/java/dalvik/system/DexClassLoader.java
 Extend the BaseDexClassLoader
-  ./src/main/java/dalvik/system/BaseDexClassLoader.java
-Extend from the ClassLoader">
+./src/main/java/dalvik/system/BaseDexClassLoader.java
+Extend from the ClassLoader, an">
   
     <link rel="alternative" href="/atom.xml" title="Just Another Codes" type="application/atom+xml">
   
@@ -181,7 +181,7 @@ Extend from the ClassLoader">
   
     <div class="article-meta">
       <a href="/2015/08/31/uesless-Android类加载器/" class="article-date">
-  	<time datetime="2015-08-31T13:02:15.747Z" itemprop="datePublished">2015-08-31</time>
+  	<time datetime="2015-08-31T13:02:45.802Z" itemprop="datePublished">2015-08-31</time>
 </a>
     </div>
   
@@ -212,10 +212,10 @@ Extend from the ClassLoader">
       
         <p>虚拟机部分</p>
 <p>  android/ics/libcore/dalvik</p>
-<p>  ./src/main/java/dalvik/system/DexClassLoader.java</p>
-<p>Extend the BaseDexClassLoader</p>
-<p>  ./src/main/java/dalvik/system/BaseDexClassLoader.java</p>
-<p>Extend from the ClassLoader, and the ClassLoader is the base JVM functions</p>
+<pre><code>.<span class="regexp">/src/m</span>ain<span class="regexp">/java/</span>dalvik<span class="regexp">/system/</span>DexClassLoader.java
+</code></pre><p>Extend the BaseDexClassLoader</p>
+<pre><code>.<span class="regexp">/src/m</span>ain<span class="regexp">/java/</span>dalvik<span class="regexp">/system/</span>BaseDexClassLoader.java
+</code></pre><p>Extend from the ClassLoader, and the ClassLoader is the base JVM functions</p>
 <p>所以可以看出，实际Android的方法依旧是继承自通用的类加载方法</p>
 <p>下面看BaseDexClassLoader构造的实例：<br>public BaseDexClassLoader(String dexPath, File optimizedDirectory,  String libraryPath, ClassLoader parent)</p>
 <p>dexPath the list of jar/apk files containing classes and resources</p>
@@ -499,6 +499,15 @@ public BaseDexClassLoader(String dexPath, File optimizedDirectory,
   
     
 <nav id="article-nav">
+  
+    <a href="/2015/10/04/ANR和Crash/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ANR和Crash
+        
+      </div>
+    </a>
   
   
     <a href="/2015/08/27/无法使用getExternalStorageDirectory/" id="article-nav-older" class="article-nav-link-wrap">
